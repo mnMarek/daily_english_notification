@@ -1,6 +1,7 @@
 import openai
 import requests
 import random
+import asyncio
 from telegram import Bot
 import os
 from openai import OpenAI  # Dodaj tę linię
@@ -37,7 +38,12 @@ def send_telegram_notification(word, sentence):
     message = f"**Tłumaczenie:**\n\nPL: *{sentence}*\n\nKliknij poniżej, aby zobaczyć odpowiedź 👇\n||EN: {word}||"
     bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=message, parse_mode="MarkdownV2")
 
+async def send_telegram_notification(word, sentence):
+    bot = Bot(token=os.getenv("TELEGRAM_BOT_TOKEN"))
+    message = f"**Tłumaczenie:**\n\nPL: *{sentence}*\n\nKliknij poniżej, aby zobaczyć odpowiedź 👇\n||EN: {word}||"
+    await bot.send_message(chat_id=os.getenv("TELEGRAM_CHAT_ID"), text=message, parse_mode="MarkdownV2")
+
 if __name__ == "__main__":
     word = get_random_word()
     sentence = generate_polish_sentence(word)
-    send_telegram_notification(word, sentence)
+    asyncio(send_telegram_notification(word, sentence))
