@@ -1,0 +1,24 @@
+name: Daily English Notification
+on:
+  schedule:
+    - cron: '0 8,12,18 * * *'  # 8:00, 12:00, 18:00 UTC (możesz zmienić)
+  workflow_dispatch:  # Umożliwia ręczne uruchomienie
+
+jobs:
+  send_notification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install openai python-telegram-bot gspread pandas
+      - name: Run script
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GOOGLE_SHEETS_URL: ${{ secrets.GOOGLE_SHEETS_URL }}
+        run: python send_notification.py
