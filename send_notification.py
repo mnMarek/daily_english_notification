@@ -29,8 +29,8 @@ async def generate_polish_sentence(word):
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "Jesteś pomocnym asystentem do nauki angielskiego."},
-            {"role": "user", "content": f"Wygeneruj przykładowe zdanie po polsku zawierające słowo/frazę '{word}', które użytkownik będzie tłumaczył na angielski. Nie podawaj tłumaczenia."}
+            {"role": "system", "content": "Jesteś pomocnym asystentem do nauki angielskiego. Generuj zdania po polsku, które można przetłumaczyć na angielski używając konkretnych zwrotów."},
+            {"role": "user", "content": f"Wygeneruj naturalne zdanie po polsku, które będzie można przetłumaczyć na angielski używając zwrotu '{word}'. W zdaniu polskim NIE używaj angielskiego zwrotu."}
         ]
     )
     return response.choices[0].message.content
@@ -39,11 +39,17 @@ async def translate_to_english(polish_sentence, word):
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": f"Jesteś tłumaczem polsko-angielskim. W tłumaczeniu musisz użyć dokładnie frazy '{word}' w formie angielskiej."},
-            {"role": "user", "content": f"Przetłumacz na angielski, używając dokładnie frazy '{word}': '{polish_sentence}'"}
+            {"role": "system", "content": f"Jesteś tłumaczem polsko-angielskim. W tłumaczeniu musisz użyć dokładnie frazy '{word}'."},
+            {"role": "user", "content": f"Przetłumacz na angielski używając dokładnie frazy '{word}': '{polish_sentence}'"}
         ]
     )
-    return response.choices[0].message.content
+    translation = response.choices[0].message.content
+    
+    # Dodatkowa weryfikacja
+    if word.lower() not in translation.lower():
+        translation = f"{translation} (must include: {word})"
+    
+    return translation
 
 async def send_telegram_notification(word, polish_sentence, english_translation):
     bot = Bot(token=TELEGRAM_BOT_TOKEN)
