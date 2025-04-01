@@ -1,24 +1,22 @@
 import openai
-import pandas as pd
-import gspread
-from telegram import Bot
+import requests
 import random
+from telegram import Bot
 import os
 
 # Konfiguracja
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-GOOGLE_SHEETS_URL = os.getenv("GOOGLE_SHEETS_URL")
+WORDS_GIST_URL = "https://gist.githubusercontent.com/[USER]/[GIST_ID]/raw/..."  # Zmień na swój URL
 
-# Pobierz słowo/frazę z Google Sheets
+# Pobierz słowa/frazy z Gist
 def get_random_word():
-    gc = gspread.service_account(filename="credentials.json")  # Wymaga wcześniejszej autoryzacji
-    sheet = gc.open_by_url(GOOGLE_SHEETS_URL).sheet1
-    records = sheet.get_all_records()
-    return random.choice(records)["Word/Phrase"]
+    response = requests.get(WORDS_GIST_URL)
+    words = response.json()
+    return random.choice(words)
 
-# Wygeneruj przykładowe zdanie po polsku
+# Generuj zdanie po polsku (OpenAI)
 def generate_polish_sentence(word):
     openai.api_key = OPENAI_API_KEY
     response = openai.ChatCompletion.create(
@@ -30,7 +28,7 @@ def generate_polish_sentence(word):
     )
     return response.choices[0].message["content"]
 
-# Wyślij powiadomienie przez Telegram
+# Wyślij powiadomienie na Telegram
 def send_telegram_notification(word, sentence):
     bot = Bot(token=TELEGRAM_BOT_TOKEN)
     message = f"**Tłumaczenie:**\n\nPL: *{sentence}*\n\nKliknij poniżej, aby zobaczyć odpowiedź 👇\n||EN: {word}||"
