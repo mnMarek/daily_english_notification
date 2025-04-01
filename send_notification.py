@@ -1,37 +1,29 @@
-import openai
-import requests
+from deepseek_api import Chat  # Wymaga instalacji biblioteki
 import random
 from telegram import Bot
 import os
-from openai import OpenAI  # Dodaj tę linię
+import json
 
 # Konfiguracja
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")  # Dodaj nowy secret w GitHub!
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-WORDS_GIST_URL = "https://gist.githubusercontent.com/mnMarek/89e786a51976316ae21be640645a87c8/raw/2edef0aebfc5d30dae45679f338ecf9ff6e338b7/words.json"  # Zmień na swój URL
 
-# Inicjalizacja klienta OpenAI
-client = OpenAI(api_key=OPENAI_API_KEY)  # Nowy sposób inicjalizacji
-
-# Pobierz słowa/frazy z Gist
 def get_random_word():
-    response = requests.get(WORDS_GIST_URL)
-    words = response.json()
+    with open('words.json', 'r') as f:
+        words = json.load(f)
     return random.choice(words)
 
-# Generuj zdanie po polsku (OpenAI)
 def generate_polish_sentence(word):
-    response = client.chat.completions.create(  # Nowa składnia
-        model="gpt-3.5-turbo",
+    response = Chat.create(
+        model="deepseek-chat",
         messages=[
             {"role": "system", "content": "Jesteś pomocnym asystentem do nauki angielskiego."},
-            {"role": "user", "content": f"Wygeneruj przykładowe zdanie po polsku zawierające słowo/frazę '{word}', które użytkownik będzie tłumaczył na angielski. Nie podawaj tłumaczenia."}
+            {"role": "user", "content": f"Wygeneruj przykładowe zdanie po polsku zawierające słowo/frazę '{word}'. Nie podawaj tłumaczenia."}
         ]
     )
-    return response.choices[0].message.content  # Nowa ścieżka dostępu
+    return response.choices[0].message.content
 
-# Wyślij powiadomienie na Telegram
 def send_telegram_notification(word, sentence):
     bot = Bot(token=TELEGRAM_BOT_TOKEN)
     message = f"**Tłumaczenie:**\n\nPL: *{sentence}*\n\nKliknij poniżej, aby zobaczyć odpowiedź 👇\n||EN: {word}||"
