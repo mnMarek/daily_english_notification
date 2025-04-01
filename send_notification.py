@@ -35,11 +35,21 @@ async def generate_polish_sentence(word):
     )
     return response.choices[0].message.content
 
-async def send_telegram_notification(word, sentence):
+async def translate_to_english(polish_sentence):
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "Jesteś tłumaczem polsko-angielskim. Tłumacz dokładnie i naturalnie."},
+            {"role": "user", "content": f"Przetłumacz na angielski: '{polish_sentence}'"}
+        ]
+    )
+    return response.choices[0].message.content
+
+async def send_telegram_notification(word, polish_sentence, english_translation):
     bot = Bot(token=TELEGRAM_BOT_TOKEN)
-    escaped_sentence = escape_markdown(sentence)
-    escaped_word = escape_markdown(word)
-    message = f"**Tłumaczenie:**\n\nPL: *{escaped_sentence}*\n\nKliknij poniżej, aby zobaczyć odpowiedź 👇\n||EN: {escaped_word}||"
+    escaped_polish = escape_markdown(polish_sentence)
+    escaped_english = escape_markdown(english_translation)
+    message = f"**Tłumaczenie:**\n\nPL: *{escaped_polish}*\n\nKliknij poniżej, aby zobaczyć odpowiedź 👇\n||EN: {escaped_english}||"
     await bot.send_message(
         chat_id=TELEGRAM_CHAT_ID,
         text=message,
@@ -48,8 +58,9 @@ async def send_telegram_notification(word, sentence):
 
 async def main():
     word = await get_random_word()
-    sentence = await generate_polish_sentence(word)
-    await send_telegram_notification(word, sentence)
+    polish_sentence = await generate_polish_sentence(word)
+    english_translation = await translate_to_english(polish_sentence)
+    await send_telegram_notification(word, polish_sentence, english_translation)
 
 if __name__ == "__main__":
     asyncio.run(main())
