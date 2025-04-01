@@ -35,12 +35,12 @@ async def generate_polish_sentence(word):
     )
     return response.choices[0].message.content
 
-async def translate_to_english(polish_sentence):
+async def translate_to_english(polish_sentence, word):
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "Jesteś tłumaczem polsko-angielskim. Tłumacz dokładnie i naturalnie."},
-            {"role": "user", "content": f"Przetłumacz na angielski: '{polish_sentence}'"}
+            {"role": "system", "content": f"Jesteś tłumaczem polsko-angielskim. W tłumaczeniu musisz użyć dokładnie frazy '{word}' w formie angielskiej."},
+            {"role": "user", "content": f"Przetłumacz na angielski, używając dokładnie frazy '{word}': '{polish_sentence}'"}
         ]
     )
     return response.choices[0].message.content
@@ -59,7 +59,7 @@ async def send_telegram_notification(word, polish_sentence, english_translation)
 async def main():
     word = await get_random_word()
     polish_sentence = await generate_polish_sentence(word)
-    english_translation = await translate_to_english(polish_sentence)
+    english_translation = await translate_to_english(polish_sentence, word)
     await send_telegram_notification(word, polish_sentence, english_translation)
 
 if __name__ == "__main__":
