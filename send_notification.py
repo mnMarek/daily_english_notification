@@ -31,7 +31,7 @@ async def generate_polish_sentence(word):
         messages=[
             {"role": "system", "content": "Jesteś pomocnym asystentem do nauki angielskiego. Generuj zdania po polsku, które można przetłumaczyć na angielski używając konkretnych zwrotów."},
             #{"role": "user", "content": f"Wygeneruj naturalne zdanie po polsku, które będzie można przetłumaczyć na angielski używając zwrotu '{word}'. W zdaniu polskim NIE używaj angielskiego zwrotu."}
-            {"role": "user", "content": f"Ułóż proste zdanie w języku polskim ze słowem: '{word}' tak, abym mógł je sobie przetłumaczyć na język angielski na poziomie B2. W zdaniu polskim NIE używaj angielskiego zwrotu."}
+            {"role": "user", "content": f"Ułóż proste zdanie w języku polskim ze słowem: '{word}' tak, abym mógł je sobie przetłumaczyć na język angielski na poziomie B1. W zdaniu polskim NIE używaj angielskiego zwrotu."}
         ]
     )
     return response.choices[0].message.content
