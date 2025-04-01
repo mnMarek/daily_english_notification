@@ -14,7 +14,7 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install dependencies
-        run: pip install deepseek-api python-telegram-bot
+        run: pip install openai python-telegram-bot requests
       - name: Run script
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
