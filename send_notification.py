@@ -5,6 +5,7 @@ import asyncio
 from telegram import Bot
 import os
 from openai import OpenAI
+from telegram.constants import ParseMode
 
 # Konfiguracja
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -14,6 +15,10 @@ WORDS_GIST_URL = "https://gist.githubusercontent.com/mnMarek/89e786a51976316ae21
 
 # Inicjalizacja klienta OpenAI
 client = OpenAI(api_key=OPENAI_API_KEY)
+
+def escape_markdown(text):
+    escape_chars = '_*[]()~`>#+-=|{}.!'
+    return ''.join(f'\\{char}' if char in escape_chars else char for char in text)
 
 async def get_random_word():
     response = requests.get(WORDS_GIST_URL)
@@ -32,8 +37,14 @@ async def generate_polish_sentence(word):
 
 async def send_telegram_notification(word, sentence):
     bot = Bot(token=TELEGRAM_BOT_TOKEN)
-    message = f"**Tłumaczenie:**\n\nPL: *{sentence}*\n\nKliknij poniżej, aby zobaczyć odpowiedź 👇\n||EN: {word}||"
-    await bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=message, parse_mode="MarkdownV2")
+    escaped_sentence = escape_markdown(sentence)
+    escaped_word = escape_markdown(word)
+    message = f"**Tłumaczenie:**\n\nPL: *{escaped_sentence}*\n\nKliknij poniżej, aby zobaczyć odpowiedź 👇\n||EN: {escaped_word}||"
+    await bot.send_message(
+        chat_id=TELEGRAM_CHAT_ID,
+        text=message,
+        parse_mode=ParseMode.MARKDOWN_V2
+    )
 
 async def main():
     word = await get_random_word()
