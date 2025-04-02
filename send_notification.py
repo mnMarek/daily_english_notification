@@ -11,7 +11,7 @@ from telegram.constants import ParseMode
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-WORDS_GIST_URL = "https://gist.githubusercontent.com/mnMarek/89e786a51976316ae21be640645a87c8/raw/2edef0aebfc5d30dae45679f338ecf9ff6e338b7/words.json"
+WORDS_GIST_URL = "https://gist.githubusercontent.com/mnMarek/89e786a51976316ae21be640645a87c8/raw/d5f34b2e70273ad339b688d6f87aeac00c16788a/words.json"
 
 # Inicjalizacja klienta OpenAI
 client = OpenAI(api_key=OPENAI_API_KEY)
