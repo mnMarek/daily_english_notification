@@ -4,6 +4,10 @@ on:
     - cron: '0 8,10,12,14,16,18,20 * * *'  # Powiadomienia od 8:00 do 20:00 co 2h UTC
   workflow_dispatch:  # Ręczne uruchomienie
 
+permissions:
+  contents: read
+  actions: write
+
 jobs:
   send_notification:
     runs-on: ubuntu-latest
