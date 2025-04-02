@@ -7,13 +7,14 @@ import os
 from openai import OpenAI
 from telegram.constants import ParseMode
 import pandas as pd
-from io import BytesIO
+#from io import BytesIO
 
 # Konfiguracja
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 WORDS_GIST_URL = "https://gist.githubusercontent.com/mnMarek/89e786a51976316ae21be640645a87c8/raw/e5aa3ffe878ddf697dbeeed87e08b87c484c2438/words.json"
+GITHUB_URL = "https://github.com/mnMarek/daily_english_notification/raw/refs/heads/main/Daily%20English%20Notification.xlsx"
 
 # Inicjalizacja klienta OpenAI
 client = OpenAI(api_key=OPENAI_API_KEY)
@@ -22,7 +23,20 @@ def escape_markdown(text):
     escape_chars = '_*[]()~`>#+-=|{}.!'
     return ''.join(f'\\{char}' if char in escape_chars else char for char in text)
 
-def get_words_from_onedrive():
+def get_words_from_github():
+    response = requests.get(GITHUB_URL)
+    
+    # Zapisz plik tymczasowo
+    with open("Daily_English_Notification.xlsx", "wb") as f:
+        f.write(response.content)
+    
+    # Odczytaj plik Excel
+    df = pd.read_excel("Daily_English_Notification.xlsx", engine="openpyxl")
+    words = df["WORDS / PHRASE"].tolist()
+    
+    return words
+
+""" def get_words_from_onedrive():
     ONEDRIVE_URL = "https://1drv.ms/x/s!AoUQ1OXg-n1BlJcRlBH3xYyf-TJ81A?download=1&em=2"
     
     # Pobierz plik
@@ -34,7 +48,7 @@ def get_words_from_onedrive():
     df = pd.read_excel(BytesIO(response.content), engine="openpyxl")
     words = df["WORDS / PHRASE"].tolist()
     
-    return words
+    return words """
 
 """ async def get_random_word():
     response = requests.get(WORDS_GIST_URL)
@@ -43,7 +57,7 @@ def get_words_from_onedrive():
 
 async def get_random_word():
     try:
-        words = get_words_from_onedrive()
+        words = get_words_from_github()
         return random.choice(words)
     except Exception as e:
         print(f"Błąd: {e}. Używam listy zapasowej.")
