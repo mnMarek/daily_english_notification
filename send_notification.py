@@ -6,6 +6,7 @@ from telegram import Bot
 import os
 from openai import OpenAI
 from telegram.constants import ParseMode
+import pandas as pd
 
 # Konfiguracja
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -20,10 +21,32 @@ def escape_markdown(text):
     escape_chars = '_*[]()~`>#+-=|{}.!'
     return ''.join(f'\\{char}' if char in escape_chars else char for char in text)
 
-async def get_random_word():
+def get_words_from_onedrive():
+    ONEDRIVE_URL = "https://1drv.ms/x/s!AoUQ1OXg-n1BlJcRlBH3xYyf-TJ81A?download=1&em=2"
+    
+    # Pobierz plik
+    response = requests.get(ONEDRIVE_URL)
+    with open("Daily English Notification.xlsx", "wb") as f:
+        f.write(response.content)
+    
+    # Wczytaj dane z Excela
+    df = pd.read_excel("Daily English Notification.xlsx")
+    words = df["WORDS / PHRASE"].tolist()
+    
+    return words
+
+""" async def get_random_word():
     response = requests.get(WORDS_GIST_URL)
     words = response.json()
-    return random.choice(words)
+    return random.choice(words) """
+
+async def get_random_word():
+    try:
+        words = get_words_from_onedrive()
+        return random.choice(words)
+    except Exception as e:
+        print(f"Błąd: {e}. Używam listy zapasowej.")
+        return random.choice(["Error1", "Error2"])
 
 async def generate_polish_sentence(word):
     response = client.chat.completions.create(
