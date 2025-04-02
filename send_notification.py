@@ -7,6 +7,7 @@ import os
 from openai import OpenAI
 from telegram.constants import ParseMode
 import pandas as pd
+from io import BytesIO
 
 # Konfiguracja
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -30,7 +31,7 @@ def get_words_from_onedrive():
         f.write(response.content)
     
     # Wczytaj dane z Excela
-    df = pd.read_excel("Daily English Notification.xlsx", engine="openpyxl")
+    df = pd.read_excel(BytesIO(response.content), engine="openpyxl")
     words = df["WORDS / PHRASE"].tolist()
     
     return words
