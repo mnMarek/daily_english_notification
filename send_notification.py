@@ -30,7 +30,7 @@ def get_words_from_onedrive():
         f.write(response.content)
     
     # Wczytaj dane z Excela
-    df = pd.read_excel("Daily English Notification.xlsx")
+    df = pd.read_excel("Daily English Notification.xlsx", engine="openpyxl")
     words = df["WORDS / PHRASE"].tolist()
     
     return words

@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install dependencies
-        run: pip install python-telegram-bot==20.0 openai requests pandas
+        run: pip install python-telegram-bot==20.0 openai requests pandas openpyxl
       - name: Run script
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
