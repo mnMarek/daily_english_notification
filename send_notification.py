@@ -7,13 +7,12 @@ import os
 from openai import OpenAI
 from telegram.constants import ParseMode
 import pandas as pd
-#from io import BytesIO
 
 # Konfiguracja
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-WORDS_GIST_URL = "https://gist.githubusercontent.com/mnMarek/89e786a51976316ae21be640645a87c8/raw/e5aa3ffe878ddf697dbeeed87e08b87c484c2438/words.json"
+#WORDS_GIST_URL = "https://gist.githubusercontent.com/mnMarek/89e786a51976316ae21be640645a87c8/raw/e5aa3ffe878ddf697dbeeed87e08b87c484c2438/words.json"
 GITHUB_URL = "https://github.com/mnMarek/daily_english_notification/raw/refs/heads/main/Daily%20English%20Notification.xlsx"
 
 # Inicjalizacja klienta OpenAI
@@ -36,24 +35,6 @@ def get_words_from_github():
     
     return words
 
-""" def get_words_from_onedrive():
-    ONEDRIVE_URL = "https://1drv.ms/x/s!AoUQ1OXg-n1BlJcRlBH3xYyf-TJ81A?download=1&em=2"
-    
-    # Pobierz plik
-    response = requests.get(ONEDRIVE_URL)
-    with open("Daily English Notification.xlsx", "wb") as f:
-        f.write(response.content)
-    
-    # Wczytaj dane z Excela
-    df = pd.read_excel(BytesIO(response.content), engine="openpyxl")
-    words = df["WORDS / PHRASE"].tolist()
-    
-    return words """
-
-""" async def get_random_word():
-    response = requests.get(WORDS_GIST_URL)
-    words = response.json()
-    return random.choice(words) """
 
 async def get_random_word():
     try:
