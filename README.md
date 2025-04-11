@@ -66,13 +66,8 @@ python main.py
 daily_english_notification/
 │
 ├── Daily English Notification.xlsx  # Excel file with learning phrases
-├── .env                             # Environment variables (do not commit this file)
-├── main.py                          # Main scheduler script
-├── openai_service.py                # Handles OpenAI API requests
-├── telegram_service.py              # Sends messages via Telegram
-├── schedule_config.py               # Scheduler logic (sends messages every 2h)
-├── onedrive_handler.py              # Handles reading Excel from OneDrive (optional)
-├── .github/workflows/               # GitHub Actions configuration
+├── send_notification.py             # Main script
+├── .github/workflows/               # GitHub Actions configuration (daily_notification.yml)
 └── requirements.txt                 # Python dependencies
 ```
 
