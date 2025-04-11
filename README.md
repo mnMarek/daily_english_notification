@@ -43,20 +43,26 @@ Main libraries used:
 
 ## 🚀 How to Run Locally (Optional)
 This is only necessary if you want to test or develop the script on your own machine.
-1. Clone the repository:
+
+**1. Clone the repository**
 ```bash
 git clone https://github.com/mnMarek/daily_english_notification.git
 cd daily_english_notification
 ```
 
-3. Create a .env file and fill in your credentials:
-```env
-OPENAI_API_KEY=your_openai_api_key
-TELEGRAM_TOKEN=your_telegram_bot_token
-TELEGRAM_CHAT_ID=your_telegram_chat_id
-```
-3. Prepare a 'Daily English Notification.xlsx' file with one column (with a header) containing the English words/phrases you want to learn.
-4. Run the script:
+**2. Set environment variables via GitHub repository settings**
+
+Go to your repository on GitHub → Settings → Secrets and variables → Actions
+Add the following secrets:
+- OPENAI_API_KEY – your OpenAI API key
+- TELEGRAM_TOKEN – your Telegram bot token
+- TELEGRAM_CHAT_ID – your personal chat ID
+ℹ️ These values will be securely used by the GitHub Actions workflow to execute the script.
+
+**3. Prepare a 'Daily English Notification.xlsx' file with one column (with a header) containing the English words/phrases you want to learn.**
+
+**4. Run the script**
+
 ```bash
 python main.py
 ```
