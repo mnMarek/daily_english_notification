@@ -46,7 +46,7 @@ async def get_random_word():
 
 async def generate_polish_sentence(word):
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o", #gpt-3.5-turbo
         messages=[
             {"role": "system", "content": "Jesteś pomocnym asystentem do nauki angielskiego. Generuj zdania po polsku, które można przetłumaczyć na angielski używając konkretnych zwrotów."},
             #{"role": "user", "content": f"Wygeneruj naturalne zdanie po polsku, które będzie można przetłumaczyć na angielski używając zwrotu '{word}'. W zdaniu polskim NIE używaj angielskiego zwrotu."}
