@@ -48,7 +48,7 @@ async def generate_polish_sentence(word):
     response = client.chat.completions.create(
         model="gpt-4o", #gpt-3.5-turbo
         messages=[
-            {"role": "system", "content": "Jesteś pomocnym asystentem do nauki angielskiego. Generuj zdania po polsku, które można przetłumaczyć na angielski używając konkretnych zwrotów."},
+            {"role": "system", "content": "Jesteś pomocnym asystentem do nauki angielskiego oraz eksperterm językowym, który potrafi tłumaczyć zachowując naturalność, idiomy i styl oryginału. Generuj zdania po polsku, które można przetłumaczyć na angielski używając konkretnych zwrotów."},
             #{"role": "user", "content": f"Wygeneruj naturalne zdanie po polsku, które będzie można przetłumaczyć na angielski używając zwrotu '{word}'. W zdaniu polskim NIE używaj angielskiego zwrotu."}
             {"role": "user", "content": f"Ułóż proste zdanie w języku polskim ze słowem: '{word}' tak, abym mógł je sobie przetłumaczyć na język angielski na poziomie B1. W zdaniu polskim NIE używaj angielskiego zwrotu."}
         ]
@@ -57,10 +57,10 @@ async def generate_polish_sentence(word):
 
 async def translate_to_english(polish_sentence, word):
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4-turbo",
         messages=[
-            {"role": "system", "content": f"Jesteś tłumaczem polsko-angielskim. W tłumaczeniu musisz użyć dokładnie frazy '{word}'."},
-            {"role": "user", "content": f"Przetłumacz na angielski używając dokładnie frazy '{word}': '{polish_sentence}'"}
+            {"role": "system", "content": f"Jesteś ekspertem językowym, który tłumaczy z polskiego na angielski, zachowując naturalność, idiomy i styl oryginału. W tłumaczeniu musisz użyć dokładnie frazy '{word}'."},
+            {"role": "user", "content": f"Jesteś ekspertem językowym, który tłumaczy z polskiego na angielski, zachowując naturalność, idiomy i styl oryginału. Przetłumacz na angielski używając dokładnie frazy '{word}': '{polish_sentence}'"}
         ]
     )
     translation = response.choices[0].message.content
