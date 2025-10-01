@@ -1,7 +1,7 @@
 name: Daily English Notification
 on:
   schedule:
-    - cron: '0 8,10,12,14,16,18,20 * * *'  # Powiadomienia od 8:00 do 20:00 co 2h UTC
+    - cron: '0 10,12,14,16,18 * * *'  # Powiadomienia od 10:00 do 18:00 co 2h UTC
   workflow_dispatch:  # Ręczne uruchomienie
 
 permissions:

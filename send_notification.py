@@ -57,7 +57,7 @@ async def generate_polish_sentence(word):
 
 async def translate_to_english(polish_sentence, word):
     response = client.chat.completions.create(
-        model="gpt-4-turbo",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": f"Jesteś ekspertem językowym, który tłumaczy z polskiego na angielski, zachowując naturalność, idiomy i styl oryginału. W tłumaczeniu musisz użyć dokładnie frazy '{word}'."},
             {"role": "user", "content": f"Jesteś ekspertem językowym, który tłumaczy z polskiego na angielski, zachowując naturalność, idiomy i styl oryginału. Przetłumacz na angielski używając dokładnie frazy '{word}': '{polish_sentence}'"}
